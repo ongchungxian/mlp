@@ -1,7 +1,7 @@
 import pandas as pd
 
 class data_model:
-    def __init__(self,metadatapath='data\\metadata.fea',timeseriespath='data\\timeseries.fea'):
+    def __init__(self,metadatapath='data\\train.fea',timeseriespath='data\\croppedtimeseries.fea'):
         self.metadata = pd.read_feather(metadatapath)
         self.timeseries = pd.read_feather(timeseriespath)
     
