@@ -2,3 +2,4 @@
 data/passiv.netcdf
 data/timeseries.fea
 data/timeseries_smoothed.fea
+*.pyc
