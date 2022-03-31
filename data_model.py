@@ -18,9 +18,7 @@ class data_model:
         row_series = self.timeseries[str(i)]
         return (row_metadata, row_series)
     
-    def train(self,its=1,length=64, pred_length=1, max_its=18):#generate a training dataset of the given length
-        if(its>max_its):
-            its=max_its
+    def train(self,its=1,length=64, pred_length=1):#generate a training dataset of the given length
         x_metadata = []
         x_timeseries = []
         y = []
@@ -28,9 +26,7 @@ class data_model:
             for j in range(170):
                 x_metadata.append(self.metadata1.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']])
                 station = str(self.metadata1.iloc[[j]]['ss_id'].iat[0])
-                offset1 = 170*(length+pred_length)*i
-                offset2 = j*(length+pred_length)
-                full_offset = offset1+offset2
+                full_offset = (length+pred_length)*i
                 time_chunk = []
                 for k in range(length):
                     curr_index = full_offset+k
@@ -39,9 +35,7 @@ class data_model:
                 y.append(self.timeseries.iloc[[full_offset+length]][station].iat[0])
         return (x_metadata,x_timeseries, y)
 
-    def test(self,its=1,length=64, pred_length=1, max_its=18):#generate a test dataset of the given length
-        if(its>max_its):
-            its=max_its
+    def test(self,its=1,length=64, pred_length=1):#generate a test dataset of the given length
         x_metadata = []
         x_timeseries = []
         y = []
@@ -49,9 +43,7 @@ class data_model:
             for j in range(85):
                 x_metadata.append(self.metadata1.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']])
                 station = str(self.metadata1.iloc[[j]]['ss_id'].iat[0])
-                offset1 = 85*(length+pred_length)*i
-                offset2 = j*(length+pred_length)
-                full_offset = offset1+offset2
+                full_offset = (length+pred_length)*i
                 time_chunk = []
                 for k in range(length):
                     curr_index = full_offset+k
