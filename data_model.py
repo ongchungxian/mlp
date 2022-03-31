@@ -1,9 +1,8 @@
 import pandas as pd
 
 class data_model:
-    def __init__(self,metadatapath1='data\\train.fea',metadatapath2='data\\test.fea',timeseriespath='data\\croppedtimeseries.fea'):
-        self.metadata1 = pd.read_feather(metadatapath1)
-        self.metadata2 = pd.read_feather(metadatapath2)
+    def __init__(self,metadatapath='data\\train.fea',timeseriespath='data\\croppedtimeseries.fea'):
+        self.metadata = pd.read_feather(metadatapath)
         self.timeseries = pd.read_feather(timeseriespath)
     
     def datetime(self):
@@ -18,8 +17,9 @@ class data_model:
         row_series = self.timeseries[str(i)]
         return (row_metadata, row_series)
 
-    def train(self, length=64,pred_length=1):
-        its = 200185/(length+pred_length)
+    def train(self, length=64,pred_length=1, its=None):
+        if its is None:
+            its = int(200185/(length+pred_length))
         x_ms = []
         x_ts = []
         y_s = []
@@ -28,7 +28,7 @@ class data_model:
             x_ms.append(x_m)
             x_ts.append(x_t)
             y_s.append(y)
-        return (x_ms, x_ts, y)
+        return (x_ms, x_ts, y_s)
     
     def train_func(self,i,length=64, pred_length=1):#generate a training dataset of the given length
         x_metadata = []
@@ -36,10 +36,10 @@ class data_model:
         y = []
 
         for j in range(170):
-            station = str(self.metadata1.iloc[[j]]['ss_id'].iat[0])
+            station = str(self.metadata.iloc[[j]]['ss_id'].iat[0])
             full_offset = (length+pred_length)*i
             time_chunk = []
-            metadatum1 = self.metadata1.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']].reset_index().drop('index',1)
+            metadatum1 = self.metadata.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']].reset_index().drop('index',1)
             metadatum2 = self.timeseries.iloc[[full_offset]]['datetime'].reset_index().drop('index',1)
             metadatum = pd.concat([metadatum1, metadatum2], axis=1)
             x_metadata.append(metadatum)
@@ -51,8 +51,9 @@ class data_model:
                 y.append(self.timeseries.iloc[[full_offset+length+k]][station].iat[0])
         return (x_metadata,x_timeseries, y)
 
-    def test(self, length=64,pred_length=1):
-        its = 200185/(length+pred_length)
+    def test(self, length=64,pred_length=1, its=None):
+        if its is None:
+            its = int(200185/(length+pred_length))
         x_ms = []
         x_ts = []
         y_s = []
@@ -61,7 +62,7 @@ class data_model:
             x_ms.append(x_m)
             x_ts.append(x_t)
             y_s.append(y)
-        return (x_ms, x_ts, y)
+        return (x_ms, x_ts, y_s)
 
 
     def test_func(self,i,length, pred_length):#generate a test dataset of the given length
@@ -69,10 +70,10 @@ class data_model:
         x_timeseries = []
         y = []
         for j in range(85):
-            station = str(self.metadata1.iloc[[j]]['ss_id'].iat[0])
+            station = str(self.metadata.iloc[[j]]['ss_id'].iat[0])
             full_offset = (length+pred_length)*i
             time_chunk = []
-            metadatum1 = self.metadata1.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']]
+            metadatum1 = self.metadata.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']]
             metadatum2 = self.timeseries.iloc[[full_offset]]['datetime']
             metadatum = pd.concat([metadatum1, metadatum2], axis=1)
             x_metadata.append(metadatum)
