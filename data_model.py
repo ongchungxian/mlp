@@ -18,7 +18,8 @@ class data_model:
         row_series = self.timeseries[str(i)]
         return (row_metadata, row_series)
 
-    def train(self, its = 1, length=64,pred_length=1):
+    def train(self, length=64,pred_length=1):
+        its = 200185/(length+pred_length)
         x_ms = []
         x_ts = []
         y_s = []
@@ -46,10 +47,12 @@ class data_model:
                 curr_index = full_offset+k
                 time_chunk.append(self.timeseries.iloc[[curr_index]][station].iat[0])
             x_timeseries.append(time_chunk)
-            y.append(self.timeseries.iloc[[full_offset+length]][station].iat[0])
+            for k in range(pred_length):
+                y.append(self.timeseries.iloc[[full_offset+length+k]][station].iat[0])
         return (x_metadata,x_timeseries, y)
 
-    def test(self, its = 1, length=64,pred_length=1):
+    def test(self, length=64,pred_length=1):
+        its = 200185/(length+pred_length)
         x_ms = []
         x_ts = []
         y_s = []
@@ -77,7 +80,8 @@ class data_model:
                 curr_index = full_offset+k
                 time_chunk.append(self.timeseries.iloc[[curr_index]][station].iat[0])
             x_timeseries.append(time_chunk)
-            y.append(self.timeseries.iloc[[full_offset+length]][station].iat[0])
+            for k in range(pred_length):
+                y.append(self.timeseries.iloc[[full_offset+length+k]][station].iat[0])
         return (x_metadata,x_timeseries, y)
 
 
