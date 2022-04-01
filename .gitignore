@@ -4,4 +4,4 @@ data/timeseries.fea
 data/timeseries_smoothed.fea
 *.pyc
 metadata.fea
-data/croppedtimeseries2.fea
+timeseries.fea
