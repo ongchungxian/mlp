@@ -39,7 +39,7 @@ class data_model:
             station = str(self.metadata.iloc[[j]]['ss_id'].iat[0])
             full_offset = (length+pred_length)*i
             time_chunk = []
-            metadatum1 = self.metadata.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']].reset_index().drop('index',1)
+            metadatum1 = self.metadata.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']].reset_index().drop('index',axis=1)
             metadatum2 = self.timeseries.iloc[[full_offset]]['datetime'].reset_index().drop('index',axis=1)
             metadatum = pd.concat([metadatum1, metadatum2], axis=1)
             x_metadata.append(metadatum)
@@ -73,7 +73,7 @@ class data_model:
             station = str(self.metadata.iloc[[j]]['ss_id'].iat[0])
             full_offset = (length+pred_length)*i
             time_chunk = []
-            metadatum1 = self.metadata.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']]
+            metadatum1 = self.metadata.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']].reset_index().drop('index',axis=1)
             metadatum2 = self.timeseries.iloc[[full_offset]]['datetime'].reset_index().drop('index',axis=1)
             metadatum = pd.concat([metadatum1, metadatum2], axis=1)
             x_metadata.append(metadatum)
