@@ -1,9 +1,11 @@
 import pandas as pd
 
 class data_model:
-    def __init__(self,metadatapath='data\\metadata.fea',timeseriespath='data\\croppedtimeseries.fea'):
+    def __init__(self,metadatapath='data\\metadata.fea',timeseriespath='data\\croppedtimeseries.fea',metadatapath2='data\\test.fea',timeseriespath2='data\\croppedtimeseries2.fea'):
         self.metadata = pd.read_feather(metadatapath)
         self.timeseries = pd.read_feather(timeseriespath)
+        self.metadata2 = pd.read_feather(metadatapath2)
+        self.timeseries2 = pd.read_feather(timeseriespath2)
     
     def datetime(self):
         return self.timeseries['datetime']
@@ -69,20 +71,20 @@ class data_model:
         x_metadata = []
         x_timeseries = []
         y = []
-        for j in range(85):
-            station = str(self.metadata.iloc[[j]]['ss_id'].iat[0])
+        for j in range(170):
+            station = str(self.metadata2.iloc[[j]]['ss_id'].iat[0])
             full_offset = (length+pred_length)*i
             time_chunk = []
-            metadatum1 = self.metadata.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']].reset_index().drop('index',axis=1)
-            metadatum2 = self.timeseries.iloc[[full_offset]]['datetime'].reset_index().drop('index',axis=1)
+            metadatum1 = self.metadata2.iloc[[j]][['ss_id','latitude_rounded','longitude_rounded','llsoacd','orientation','tilt','kwp']].reset_index().drop('index',axis=1)
+            metadatum2 = self.timeseries2.iloc[[full_offset]]['datetime'].reset_index().drop('index',axis=1)
             metadatum = pd.concat([metadatum1, metadatum2], axis=1)
             x_metadata.append(metadatum)
             for k in range(length):
                 curr_index = full_offset+k
-                time_chunk.append(self.timeseries.iloc[[curr_index]][station].iat[0])
+                time_chunk.append(self.timeseries2.iloc[[curr_index]][station].iat[0])
             x_timeseries.append(time_chunk)
             for k in range(pred_length):
-                y.append(self.timeseries.iloc[[full_offset+length+k]][station].iat[0])
+                y.append(self.timeseries2.iloc[[full_offset+length+k]][station].iat[0])
         return (x_metadata,x_timeseries, y)
 
 
